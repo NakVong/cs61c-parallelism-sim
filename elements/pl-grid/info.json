@@ -1,0 +1,17 @@
+{
+    "controller": "pl-grid.py",
+    "dependencies": {
+        "elementScripts": [
+            "pl-grid.js"
+        ],
+        "elementStyles": [
+            "pl-grid.css"
+        ],
+        "clientFilesCourseScripts": [
+            "pl-grid.js"
+        ],
+        "clientFilesCourseStyles": [
+            "pl-grid.css"
+        ]
+    }
+}
