@@ -1,16 +1,14 @@
 {
     "controller": "pl-grid.py",
     "dependencies": {
+        "nodeModulesScripts": [
+             "jquery-ui-dist/jquery-ui.min.js",
+             "jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"
+         ],
         "elementScripts": [
             "pl-grid.js"
         ],
         "elementStyles": [
-            "pl-grid.css"
-        ],
-        "clientFilesCourseScripts": [
-            "pl-grid.js"
-        ],
-        "clientFilesCourseStyles": [
             "pl-grid.css"
         ]
     }
