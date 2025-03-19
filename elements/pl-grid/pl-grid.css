@@ -1,5 +1,9 @@
 .example-course-custom-element .big {
   font-size: 20px;
 }
-.grid-stack { background: #FAFAD2; }
+.grid-stack { 
+  background: #FAFAD2; 
+  display: block;
+  width:100%;
+}
 .grid-stack-item-content { background-color: #18BC9C; }

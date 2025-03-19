@@ -1,14 +1,28 @@
 $(function() {
-  $('.example-course-custom-element').append('<p>This text was added by a script.</p>');
-  var items = [
-    {content: 'my first widget'}, // will default to location (0,0) and 1x1
-    {w: 2, content: 'another longer widget!'} // will be placed next at (1,0) and 2x1
-  ];
+  let opts = {
+    dragOut: true, // Allow dragging items out of the grid
+    acceptWidgets: true // Allow dropping items from other grids
+  };
+  let grids = GridStack.initAll(opts); // Initialize all elements with class 'grid-stack'
 
-  var items = [
-    {content: 'my first widget'}, // will default to location (0,0) and 1x1
-    {w: 2, content: 'another longer widget!'} // will be placed next at (1,0) and 2x1
-  ];
-  var grid = GridStack.init();
-  grid.load(items);
-})
+  // Load items into each grid
+  grids[0].load([
+    { content: 'init y' },
+    { w:3, h:0.5, content: '#pragma omp parallel' },
+    { w:1.5, h:0.5,content: 'thread 1' },
+    { w:1.5,h:0.5,content: 'thread 2' },
+    { w:1.5, h:0.5,content: 'read y' },
+    { w:1.5,h:0.5,content: 'ready y' },
+    { h:0.5,content: 'y+' },
+    { h:0.5,content: 'y-' },
+    { h:0.5,content: 'y+' },
+    { h:0.5,content: 'y-' },
+    { h:0.5,w:1.5, content: 'load y' },
+    { h:0.5,w:1.5, content: 'load y' },
+  ]);
+
+  grids[1].load([
+    { content: 'main' },
+
+  ]);
+});
