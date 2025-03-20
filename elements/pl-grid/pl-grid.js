@@ -1,14 +1,26 @@
 $(function() {
-  $('.example-course-custom-element').append('<p>This text was added by a script.</p>');
-  var items = [
-    {content: 'my first widget'}, // will default to location (0,0) and 1x1
-    {w: 2, content: 'another longer widget!'} // will be placed next at (1,0) and 2x1
+  // initialize options
+  let opts = {
+    dragOut: false,
+    acceptWidgets: true,
+    dragBetweenGrids: true
+  }
+  
+  // Initialize the first grid
+  var grid1 = GridStack.init(opts, '#grid1');
+  
+  items1 = [
+    {content: 'my first widget'}, // widget in first grid
+    {w: 2, content: 'another longer widget!'} // widget in first grid]
   ];
+  grid1.load(items1);
 
-  var items = [
-    {content: 'my first widget'}, // will default to location (0,0) and 1x1
-    {w: 2, content: 'another longer widget!'} // will be placed next at (1,0) and 2x1
-  ];
-  var grid = GridStack.init();
-  grid.load(items);
-})
+  // Initialize the second grid
+  var grid2 = GridStack.init(opts, '#grid2');
+  
+  var items2 = [
+    {content: 'widget for second grid'},
+    {w: 2, content: 'another widget for second grid'}
+  ]
+  grid2.load(items2);
+});
