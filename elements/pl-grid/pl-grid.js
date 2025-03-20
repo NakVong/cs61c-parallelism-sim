@@ -2,7 +2,7 @@ $(function() {
   let options = {
     dragOut: true, // Allow dragging items out of the grid
     acceptWidgets: true, // Allow dropping items from other grids
-    float: true // Freeform (without this it tries to minimize free space)
+    float: true, // Freeform (without this it tries to minimize free space)
   };
   let grids = GridStack.initAll(options); // Initialize all elements with class 'grid-stack'
 

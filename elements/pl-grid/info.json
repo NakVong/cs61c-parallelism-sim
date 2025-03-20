@@ -1,10 +1,6 @@
 {
     "controller": "pl-grid.py",
     "dependencies": {
-        "nodeModulesScripts": [
-            "jquery-ui-dist/jquery-ui.min.js",
-            "jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"
-        ],
         "clientFilesCourseScripts": [
             "gridstack-all.js"
         ],
