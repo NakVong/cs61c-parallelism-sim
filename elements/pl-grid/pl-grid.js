@@ -7,14 +7,9 @@ $(function() {
     acceptWidgets: true, // Allow dropping items from other grids
     float: true, // Freeform (without this it tries to minimize free space)
   };
-  // let trash_options = {
-  //   disableDrag: true,
-  //   acceptWidgets: true, // Allow items to be dropped into trash
-  // };
 
   let source_grid = GridStack.init(source_options, '.source-grid')
   let dest_grid = GridStack.init(dest_options, 'dest-grid')
-  // let trash_grid = GridStack.init(trash_options, 'trash-grid')
 
   // Load items into each grid
   source_grid.load([
@@ -29,38 +24,25 @@ $(function() {
   ]);
 
   dest_grid.load([
-    { w:2, h:0.5, content: 'main', id: 'b9' },
+    { w:2, h:0.5, content: 'main', id: 'b9', noMove: true },
   ]);
 
-  // trash_grid.load([
-  //   { w:2, h:0.5, content: 'hey fellow trash', id: 'b10'}
-  // ])
-
-  // create a copy in the source grid when dragged out of it
-  dest_grid.on('dropped', function(event, prevWidget, newWidget) {
-    source_grid.addWidget(
-      { w: prevWidget.w, h: prevWidget.h, content: prevWidget.content, id: prevWidget.id }
-    );
-    newWidget.el.setAttribute("gs-id", prevWidget.id + "-dup");
+  // removes duplicate source_grid blocks when dragged back into source_grid
+  source_grid.on('dropped', function(event, prev_widget, new_widget) { // GridStackNode (data on the widget properties)
+    let existing_widgets = source_grid.getGridItems(); // array of GridStackHTMLElement (DOM Element)
+    let duplicate_found = existing_widgets.some(widget_element => { 
+      let node = widget_element.gridstackNode; // Each GridStackHTMLElement has reference to GridStackNode
+      return node.id == new_widget.id; 
+    });
+    if (duplicate_found) {
+      source_grid.removeWidget(new_widget.el); 
+    }
   });
 
-  // trash_grid.on('dropped', function(event, prevWidget, newWidget) {
-  //   let gs_id = prevWidget.id;
-  //   console.log(gs_id);
-  //   if (gs_id.endsWith("-dup")) {
-  //     trash_grid.remove(newWidget.el);
-  //   }
-  // })
-
-  // checks if there it is a block from the source grid and removes it if so
-  source_grid.on('dropped', function(event, prevWidget, newWidget) {
-    let existingWidgets = source_grid.getGridItems();
-    let duplicateFound = existingWidgets.some(widgetElement => {
-      let node = widgetElement.gridstackNode;
-      return node.id == newWidget.id; 
-    });
-    if (duplicateFound) {
-      source_grid.removeWidget(newWidget.el); 
-    }
+  // duplicate source_grid blocks when dragged out of source_grid into dest_grid
+  dest_grid.on('dropped', function(event, prev_widget, new_widget) {
+    source_grid.addWidget(
+      { w: prev_widget.w, h: prev_widget.h, content: prev_widget.content, id: prev_widget.id }
+    );
   });
 });
