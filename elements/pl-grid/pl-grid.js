@@ -1,7 +1,7 @@
 $(function() {
   let source_options = {
     acceptWidgets: true, // Allow dropping items from other grids
-    float: true, // Freeform (without this it tries to minimize free space)
+    float: false
   };
   let dest_options = {
     acceptWidgets: true, // Allow dropping items from other grids
@@ -13,18 +13,18 @@ $(function() {
 
   // Load items into each grid
   source_grid.load([
-    { w:2, h:0.5, content: 'init y', id: 'b1' },
-    { w:2, h:0.5, content: '#pragma omp parallel', id: 'b2' },
-    { w:2, h:0.5, content: 'thread 1', id: 'b3' },
-    { w:2, h:0.5, content: 'thread 2', id: 'b4' },
-    { w:2, h:0.5, content: 'read y', id: 'b5' },
-    { w:2, h:0.5, content: 'y+', id: 'b6' },
-    { w:2, h:0.5, content: 'y-', id: 'b7' },
-    { w:2, h:0.5, content: 'load y', id: 'b8' },
+    { w: 2, h: 0.5, content: 'read y' },
+    { w: 2, h: 0.5, content: 'y+' },
+    { w: 2, h: 0.5, content: 'y-' },
+    { w: 2, h: 0.5, content: 'write y' }
   ]);
 
   dest_grid.load([
-    { w:2, h:0.5, content: 'main', id: 'b9', noMove: true },
+    { x: 0, y: 0, w: 2, h: 0.5, content: 'main', noMove: true, noResize: true, locked: true },
+    { x: 0, y: 1, w: 2, h: 0.5, content: 'init y', noMove: true, noResize: true, locked: true },
+    { x: 0, y: 2, w: 2, h: 0.5, content: '#pragma omp parallel', noMove: true, noResize: true, locked: true },
+    { x: 2, y: 2, w: 2, h: 0.5, content: 'thread 1', noMove: true, noResize: true, locked: true },
+    { x: 4, y: 2, w: 2, h: 0.5, content: 'thread 2', noMove: true, noResize: true, locked: true }
   ]);
 
   // removes duplicate source_grid blocks when dragged back into source_grid
