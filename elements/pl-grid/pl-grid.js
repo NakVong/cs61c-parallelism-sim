@@ -1,4 +1,4 @@
-const elementColors = {"main" : "green", "thread 1" : "red", "thread 2" : "blue"};
+const elementColors = {"main" : "#d8bfd8", "init y" :"#d8bfd8", "#pragma omp parallel" : "#d8bfd8", "thread 1" : "#f08080", "thread 2" : "	#e0ffff"};
 const elementClasses = {"main" : [], "thread 1" : [], "thread 2" : []};
 
 $(function() {
