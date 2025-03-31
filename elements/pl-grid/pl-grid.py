@@ -1,5 +1,7 @@
 import random
 import chevron
+import lxml.html
+import prairielearn as pl
 
 
 def prepare(element_html, data):
@@ -14,3 +16,5 @@ def render(element_html, data):
     }
     with open('pl-grid.mustache', 'r') as f:
         return chevron.render(f, html_params).strip()
+    
+

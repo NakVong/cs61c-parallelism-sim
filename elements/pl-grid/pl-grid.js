@@ -1,3 +1,6 @@
+const elementColors = {"main" : "green", "thread 1" : "red", "thread 2" : "blue"};
+const elementClasses = {"main" : [], "thread 1" : [], "thread 2" : []};
+
 $(function() {
   let source_options = {
     acceptWidgets: true, // Allow dropping items from other grids
@@ -44,5 +47,50 @@ $(function() {
     source_grid.addWidget(
       { w: prev_widget.w, h: prev_widget.h, content: prev_widget.content, id: prev_widget.id }
     );
+    console.log(new_widget.el);
+    setColorToThread(new_widget.el);
   });
+
+  // check column for thread and applies same color
+  function setColorToThread(new_widget) {
+    let column = new_widget.getAttribute('gs-x');
+    console.log(column);
+    let existing_widgets = dest_grid.getGridItems();
+    let color = null;
+    
+    existing_widgets.forEach(widget_element => {
+      // Check if the widget is in the same column
+      let widget_column = widget_element.getAttribute('gs-x');
+      console.log(widget_column);
+      if (column === widget_column) {
+        let text = $(widget_element).text();  // Ensure no extra spaces
+        console.log('Checking widget text:', text);  // Log the text being checked
+        if (text in elementColors) {
+          color = elementColors[text];
+          console.log('Color found:', color);  // Log the color being applied
+          return false;  // Exit the loop once color is found
+        }
+      }
+    });
+  
+    if (color) {
+      $(new_widget).find('.grid-stack-item-content').css('background-color', color);
+    } else {
+      console.log('No color found for column:', column);  // Log if no color is found
+    }
+  }
+  
+
+  // After loading, select which elements you want to change the background color for.
+  // Gridstack doesn't support element classes unfortunately so need to set color manually after loading
+  function setColorByThread(grid, elementColors) {
+    $('#' + grid + ' .grid-stack-item-content').each(function() {
+      let text = $(this).text(); 
+      if (text in elementColors) { 
+        $(this).css('background-color', elementColors[text]); 
+      }
+    });
+  }
+  setColorByThread('grid2', elementColors);
+  
 });
