@@ -1,3 +1,16 @@
+<pl-question-panel>
+    <p>Create a trace table that results in the following state for two threads: y = -2</p>
+    <pl-code language="c">
+        int y = 0;
+        #pragma omp parallel{
+            y = y + 1;
+            y = y - 2;
+        }
+    </pl-code>
+</pl-question-panel>
+
+
+
 <pl-grid>
     <pl-source> <!-- elements in source grid -->
         <pl-element x = 0, y = 0, color = "#ffffff">read y</pl-element>
