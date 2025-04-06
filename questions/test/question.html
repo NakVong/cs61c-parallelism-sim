@@ -1,1 +1,24 @@
-<pl-grid></pl-grid>
+<pl-grid>
+    <pl-source> <!-- Define elements in source grid -->
+        <pl-element x = 0, y = 0, color = "#ffffff">read y</pl-element>
+        <pl-element x = 1, y = 0, color = "#ffffff">y++</pl-element>
+        <pl-element x = 2, y = 0, color = "#ffffff">y--</pl-element>
+        <pl-element x = 3, y = 0, color = "#ffffff">write y</pl-element>
+    </pl-source>
+
+    <pl-destination> <!-- Define how destination grid is prepopulated -->
+        <pl-element x = 0, y = 0, color = "#d8bfd8">Main</pl-element>
+        <pl-element x = 0, y = 1, color = "#d8bfd8">init y</pl-element>
+        <pl-element x = 0, y = 2, color = "#d8bfd8">#pragma omp parallel</pl-element>
+        <pl-element x = 1, y = 2, color = "#f08080">thread 1</pl-element>
+        <pl-element x = 2, y = 2, color = "#e0ffff">thread 2</pl-element>
+    </pl-destination>
+    
+    <pl-answer-grid> <!-- Define solution grid (not shown to student) -->
+        <pl-element x = 0, y = 0, color = "#d8bfd8">Main</pl-element>
+        <pl-element x = 0, y = 1, color = "#d8bfd8">init y</pl-element>
+        <pl-element x = 0, y = 2, color = "#d8bfd8">#pragma omp parallel</pl-element>
+        <pl-element x = 1, y = 2, color = "#f08080">thread 1</pl-element>
+        <pl-element x = 2, y = 2, color = "#e0ffff">thread 2</pl-element>
+    </pl-answer-grid>
+</pl-grid>
