@@ -1,4 +1,4 @@
-const elementColors = {"main" : "#d8bfd8", "init y" :"#d8bfd8", "#pragma omp parallel" : "#d8bfd8", "thread 1" : "#f08080", "thread 2" : "	#e0ffff"};
+const elementColors = {"main" : "green", "thread 1" : "red", "thread 2" : "blue"};
 const elementClasses = {"main" : [], "thread 1" : [], "thread 2" : []};
 
 $(function() {
@@ -47,27 +47,28 @@ $(function() {
     source_grid.addWidget(
       { w: prev_widget.w, h: prev_widget.h, content: prev_widget.content, id: prev_widget.id }
     );
-    console.log(new_widget.el);
+    let widget_data = { x: new_widget.x, y: new_widget.y, content: new_widget.content }
+    console.log(widget_data);
     setColorToThread(new_widget.el);
   });
 
   // check column for thread and applies same color
   function setColorToThread(new_widget) {
     let column = new_widget.getAttribute('gs-x');
-    console.log(column);
+    // console.log(column);
     let existing_widgets = dest_grid.getGridItems();
     let color = null;
     
     existing_widgets.forEach(widget_element => {
       // Check if the widget is in the same column
       let widget_column = widget_element.getAttribute('gs-x');
-      console.log(widget_column);
+      // console.log(widget_column);
       if (column === widget_column) {
         let text = $(widget_element).text();  // Ensure no extra spaces
-        console.log('Checking widget text:', text);  // Log the text being checked
+        // console.log('Checking widget text:', text);  // Log the text being checked
         if (text in elementColors) {
           color = elementColors[text];
-          console.log('Color found:', color);  // Log the color being applied
+          // console.log('Color found:', color);  // Log the color being applied
           return false;  // Exit the loop once color is found
         }
       }

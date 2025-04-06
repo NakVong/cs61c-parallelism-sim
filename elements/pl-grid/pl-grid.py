@@ -9,11 +9,23 @@ def prepare(element_html, data):
     # return data
     element = lxml.html.fragment_fromstring(element_html)
 
+    answer_grid_data = []
+
     for html_tags in element:
-        if html_tags.tag == "pl-desination":
-            print(html_tags.tag)
         if html_tags.tag == "pl-answer-grid":
-            print(html_tags.tag)
+            for el_tag in html_tags:
+                if el_tag.tag == "pl-element":
+                    content = el_tag.text_content().strip()
+                    x = int(el_tag.get("x", 100))
+                    y = int(el_tag.get("y", 100))
+                    answer_grid_data.append({
+                        "content": content,
+                        "x": x,
+                        "y": y
+                        })
+    data["correct_answers"]["grid_answer"] = answer_grid_data
+    print(answer_grid_data)
+
 
 
 def render(element_html, data):
