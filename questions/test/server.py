@@ -27,6 +27,8 @@ def parse_html(filepath, tags):
             element_data = [x, y, color, text] # list containing individual pl-element attributes
             grid_data.append(element_data)
         html_data[tag] = grid_data
-    #print(html_data)        
+    return html_data       
+
 def generate(data):
-    parse_html(filepath, tags)
+    data["params"]["grid"] = pl.to_json(parse_html(filepath, tags))
+    data["correct_answers"] = pl.to_json(parse_html(filepath, tags)['pl-answer-grid'])
