@@ -17,8 +17,6 @@ def parse_html(filepath, tags):
     for tag in tags:
         grid = root.xpath('//pl-grid/' + tag + '/pl-element')
         for element in grid:
-            #element = root.xpath('//pl-grid/pl-source/pl-element')[i]
-
             x = element.get('x')
             y = element.get('y')
             color = element.get('color')
