@@ -1,7 +1,4 @@
-import random
-import matplotlib.pyplot as plt
 import prairielearn as pl
-import numpy as np
 from lxml import html
 
 filepath = "question.html"
@@ -19,12 +16,14 @@ def parse_html(filepath, tags):
         grid = root.xpath('//pl-grid/' + tag + '/pl-element')
         grid_data = [] # nested list containing info for each pl-element tag
         for element in grid:
-            x = element.get('x')
-            y = element.get('y')
+            w = float(element.get('w'))
+            h = float(element.get('h'))
+            x = float(element.get('x'))
+            y = float(element.get('y'))
             color = element.get('color')
             text = element.text
 
-            element_data = [x, y, color, text] # list containing individual pl-element attributes
+            element_data = {'x':x, 'y':y, 'w':w, 'h':h, 'color':color, 'content':text} # dict containing individual pl-element attributes (needs to be a json object when we dump it)
             grid_data.append(element_data)
         html_data[tag] = grid_data
     return html_data       
