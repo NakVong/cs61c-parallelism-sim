@@ -31,4 +31,3 @@ def parse_html(filepath, tags):
 
 def generate(data):
     data["params"]["grid"] = pl.to_json(parse_html(filepath, tags))
-    data["correct_answers"] = pl.to_json(parse_html(filepath, tags)['pl-answer-grid'])
