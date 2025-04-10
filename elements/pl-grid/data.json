@@ -1,0 +1,79 @@
+{
+  "pl-source": [
+    {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 0.5,
+      "color": "#ffffff",
+      "content": "read y"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "w": 2,
+      "h": 0.5,
+      "color": "#ffffff",
+      "content": "y++"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "w": 2,
+      "h": 0.5,
+      "color": "#ffffff",
+      "content": "y--"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "w": 2,
+      "h": 0.5,
+      "color": "#ffffff",
+      "content": "write y"
+    }
+  ],
+  "pl-destination": [
+    {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 0.5,
+      "color": "#d8bfd8",
+      "content": "Main"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "w": 2,
+      "h": 0.5,
+      "color": "#d8bfd8",
+      "content": "init y"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "w": 2,
+      "h": 0.5,
+      "color": "#d8bfd8",
+      "content": "#pragma omp parallel"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "w": 2,
+      "h": 0.5,
+      "color": "#f08080",
+      "content": "thread 1"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "w": 2,
+      "h": 0.5,
+      "color": "#e0ffff",
+      "content": "thread 2"
+    }
+  ],
+  "pl-answer-grid": []
+}
