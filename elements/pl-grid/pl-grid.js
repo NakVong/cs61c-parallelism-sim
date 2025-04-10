@@ -1,5 +1,7 @@
 const elementColors = {"main" : "#d8bfd8", "init y" :"#d8bfd8", "#pragma omp parallel" : "#d8bfd8", "thread 1" : "#f08080", "thread 2" : "	#e0ffff"};
-const elementClasses = {"main" : [], "thread 1" : [], "thread 2" : []};
+// const elementClasses = {"main" : [], "thread 1" : [], "thread 2" : []};
+const destID = "#grid2";
+const inputID = "#question-input"
 
 $(function() {
   let source_options = {
@@ -48,9 +50,31 @@ $(function() {
       { w: prev_widget.w, h: prev_widget.h, content: prev_widget.content, id: prev_widget.id }
     );
     let widget_data = { x: new_widget.x, y: new_widget.y, content: new_widget.content }
-    console.log(widget_data);
+    // console.log(widget_data);
     setColorToThread(new_widget.el);
+
+    setAnswer();
+
+    console.log("Current hidden input value:", $(inputID).val());
   });
+
+  // updates the values in the hidden input field
+  function setAnswer() {
+    var grid_cells = $(destID).children(); 
+    var student_answers = [];
+    for (const grid_cell of grid_cells) {
+      var cell = $(grid_cell) // convert DOM to JQuery
+      var answer_html = cell.find(".grid-stack-item-content").html().trim();
+      var answer_x = cell.attr("gs-x");
+      var answer_y = cell.attr("gs-y");
+      student_answers.push({
+        inner_html: answer_html,
+        x: answer_x,
+        y: answer_y
+      })
+    }
+    $(inputID).val(JSON.stringify(student_answers));
+  }
 
   // check column for thread and applies same color
   function setColorToThread(new_widget) {

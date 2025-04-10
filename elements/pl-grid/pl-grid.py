@@ -21,9 +21,9 @@ def prepare(element_html, data):
             for inner_tag in html_tags:
                 if inner_tag.tag == "pl-element":
                     answer_data_dict: GridAnswerData = {
-                        "inner_html": inner_tag.text_content().strip(),
-                        "x": int(inner_tag.get("x", 100)),
-                        "y": int(inner_tag.get("y", 100))
+                        "inner_html":inner_tag.text_content().strip(),
+                        "x":int(inner_tag.get("x", 100)),
+                        "y":int(inner_tag.get("y", 100))
                     }
                     correct_answers.append(answer_data_dict)
     data["correct_answers"]["grid_answer"] = correct_answers
