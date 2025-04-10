@@ -63,7 +63,7 @@ $(function() {
     var grid_cells = $(destID).children(); 
     var student_answers = [];
     for (const grid_cell of grid_cells) {
-      var cell = $(grid_cell) // convert DOM to JQuery
+      var cell = $(grid_cell) // convert DOM to JQuery Object
       var answer_html = cell.find(".grid-stack-item-content").html().trim();
       var answer_x = cell.attr("gs-x");
       var answer_y = cell.attr("gs-y");

@@ -1,4 +1,5 @@
 import random
+import json
 from typing import TypedDict
 
 import chevron
@@ -21,9 +22,9 @@ def prepare(element_html, data):
             for inner_tag in html_tags:
                 if inner_tag.tag == "pl-element":
                     answer_data_dict: GridAnswerData = {
-                        "inner_html":inner_tag.text_content().strip(),
-                        "x":int(inner_tag.get("x", 100)),
-                        "y":int(inner_tag.get("y", 100))
+                        "inner_html": inner_tag.text_content().strip(),
+                        "x": int(inner_tag.get("x", 100)),
+                        "y": int(inner_tag.get("y", 100))
                     }
                     correct_answers.append(answer_data_dict)
     data["correct_answers"]["grid_answer"] = correct_answers
@@ -64,3 +65,11 @@ def render(element_html, data):
             return chevron.render(f, html_params).strip()
     
 
+def parse(element_html, data):
+    element = lxml.html.fragment_fromstring(element_html)
+    student_answer = data["raw_submitted_answers"].get("test-input", "[]")
+    student_answer = json.loads(student_answer)
+    data["submitted_answers"]["grid_answer"] = student_answer
+
+def grade(element_html, data):
+    print(data["submitted_answers"]["grid_answer"])
