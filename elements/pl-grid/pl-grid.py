@@ -27,8 +27,8 @@ def prepare(element_html, data):
                         "y": int(inner_tag.get("y", 100))
                     }
                     correct_answers.append(answer_data_dict)
-    data["correct_answers"]["grid_answer"] = correct_answers
-    print(correct_answers)
+    data["correct_answers"]["test"] = correct_answers
+    # print(correct_answers)
 
 
 
@@ -69,7 +69,29 @@ def parse(element_html, data):
     element = lxml.html.fragment_fromstring(element_html)
     student_answer = data["raw_submitted_answers"].get("test-input", "[]")
     student_answer = json.loads(student_answer)
-    data["submitted_answers"]["grid_answer"] = student_answer
+    data["submitted_answers"]["test"] = student_answer
 
 def grade(element_html, data):
-    print(data["submitted_answers"]["grid_answer"])
+    # print(data["submitted_answers"]["grid_answer"])
+    full_score_possible = len(data["correct_answers"]["test"])
+    correct_cells = 0
+
+    for cell in data["submitted_answers"]["test"]:
+        cell["x"] = int(cell["x"])
+        cell["y"] = int(cell["y"])
+        if (cell in data["correct_answers"]["test"]):
+            correct_cells += 1
+        
+    score = correct_cells / full_score_possible if full_score_possible > 0 else 0
+    
+    data["partial_scores"]["test"] = {
+        "score": score,
+        "feedback": f"{correct_cells} out of {full_score_possible} cells matched.",
+    }
+
+        
+    # for cell in data["correct_answers"]["test"]:
+    #     print(cell)
+
+    # for cell in data["submitted_answers"]["test"]:
+    #     print(cell)

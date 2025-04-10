@@ -1,8 +1,8 @@
 <pl-grid>
     <pl-source> <!-- Define elements in source grid -->
         <pl-element x = "0", y = "0", color = "#ffffff">read y</pl-element>
-        <pl-element x = "2", y = "0", color = "#ffffff">y++</pl-element>
-        <pl-element x = "4", y = "0", color = "#ffffff">y--</pl-element>
+        <pl-element x = "2", y = "0", color = "#ffffff">y+</pl-element>
+        <pl-element x = "4", y = "0", color = "#ffffff">y-</pl-element>
         <pl-element x = "6", y = "0", color = "#ffffff">write y</pl-element>
     </pl-source>
 
@@ -20,5 +20,8 @@
         <pl-element x = "0", y = "2", color = "#d8bfd8">#pragma omp parallel</pl-element>
         <pl-element x = "2", y = "2", color = "#f08080">thread 1</pl-element>
         <pl-element x = "4", y = "2", color = "#e0ffff">thread 2</pl-element>
+        <pl-element x = "2", y = "4", color = "#ffffff">y+</pl-element>
+        <pl-element x = "2", y = "3", color = "#ffffff">read y</pl-element>
+        <pl-element x = "2", y = "5", color = "#ffffff">write y</pl-element>
     </pl-answer-grid>
 </pl-grid>
