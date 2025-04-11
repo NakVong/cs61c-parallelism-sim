@@ -16,6 +16,7 @@ def prepare(element_html, data):
     element = lxml.html.fragment_fromstring(element_html)
 
     correct_answers: list[GridAnswerData] = []
+    present_blocks: list[GridAnswerData] = []
 
     for html_tags in element:
         if html_tags.tag == "pl-answer-grid":
@@ -27,7 +28,17 @@ def prepare(element_html, data):
                         "y": int(inner_tag.get("y", 100))
                     }
                     correct_answers.append(answer_data_dict)
+        elif html_tags.tag == "pl-destination":
+            for inner_tag in html_tags:
+                if inner_tag.tag == "pl-element":
+                    present_block_dict: GridAnswerData = {
+                        "inner_html": inner_tag.text_content().strip(),
+                        "x": int(inner_tag.get("x", 100)),
+                        "y": int(inner_tag.get("y", 100))
+                    }
+                    present_blocks.append(present_block_dict)
     data["correct_answers"]["test"] = correct_answers
+    data["params"]["test"] = present_blocks
     # print(correct_answers)
 
 
@@ -73,13 +84,13 @@ def parse(element_html, data):
 
 def grade(element_html, data):
     # print(data["submitted_answers"]["grid_answer"])
-    full_score_possible = len(data["correct_answers"]["test"])
+    full_score_possible = len(data["correct_answers"]["test"]) - len(data["params"]["test"])
     correct_cells = 0
 
     for cell in data["submitted_answers"]["test"]:
         cell["x"] = int(cell["x"])
         cell["y"] = int(cell["y"])
-        if (cell in data["correct_answers"]["test"]):
+        if (cell in data["correct_answers"]["test"] and cell not in data["params"]["test"]):
             correct_cells += 1
         
     score = correct_cells / full_score_possible if full_score_possible > 0 else 0
