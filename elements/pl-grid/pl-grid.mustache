@@ -12,3 +12,20 @@
   </div>
   <div class="grid-stack dest-grid" id="grid2"></div>
 </div>
+
+<div class="pl-grid">
+  {{#grids}}
+  <div class="{{grid_type}}" data-grid-type="{{grid_type}}">
+    {{#elements}}
+    <div class="pl-element"
+         data-w="{{w}}"
+         data-h="{{h}}"
+         data-x="{{x}}"
+         data-y="{{y}}"
+         data-color="{{color}}">
+      {{content}}
+    </div>
+    {{/elements}}
+  </div>
+  {{/grids}}
+</div>
