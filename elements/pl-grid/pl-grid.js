@@ -1,9 +1,10 @@
 const elementColors = {"main" : "#d8bfd8", "init y" :"#d8bfd8", "#pragma omp parallel" : "#d8bfd8", "thread 1" : "#f08080", "thread 2" : "	#e0ffff"};
 // const elementClasses = {"main" : [], "thread 1" : [], "thread 2" : []};
 const destID = "#grid2";
-const inputID = "#question-input"
+const studentInputID = "#answer-input"
 
 $(function() {
+  
   let source_options = {
     acceptWidgets: true, // Allow dropping items from other grids
     float: false
@@ -55,7 +56,7 @@ $(function() {
 
     setAnswer();
 
-    console.log("Current hidden input value:", $(inputID).val());
+    console.log("Current hidden input value:", $(studentInputID).val());
   });
 
   // updates the values in the hidden input field
@@ -73,7 +74,7 @@ $(function() {
         y: answer_y
       })
     }
-    $(inputID).val(JSON.stringify(student_answers));
+    $(studentInputID).val(JSON.stringify(student_answers));
   }
 
   // check column for thread and applies same color
