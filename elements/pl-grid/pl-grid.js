@@ -2,8 +2,11 @@ const elementColors = {"main" : "#d8bfd8", "init y" :"#d8bfd8", "#pragma omp par
 // const elementClasses = {"main" : [], "thread 1" : [], "thread 2" : []};
 const destID = "#grid2";
 const studentInputID = "#answer-input"
+const loadDataID = "#load-data"
 
 $(function() {
+
+  const load_data = JSON.parse($(loadDataID).val())
   
   let source_options = {
     acceptWidgets: true, // Allow dropping items from other grids
@@ -18,20 +21,9 @@ $(function() {
   let dest_grid = GridStack.init(dest_options, 'dest-grid')
 
   // Load items into each grid
-  source_grid.load([
-    { x: 0, y: 0, w: 2, h: 0.5, content: 'read y' },
-    { x: 2, y: 0, w: 2, h: 0.5, content: 'y+' },
-    { x: 4, y: 0, w: 2, h: 0.5, content: 'y-' },
-    { x: 6, y: 0, w: 2, h: 0.5, content: 'write y' }
-  ]);
+  source_grid.load(load_data.source);
 
-  dest_grid.load([
-    { x: 0, y: 0, w: 2, h: 0.5, content: 'main', noMove: true, noResize: true, locked: true },
-    { x: 0, y: 1, w: 2, h: 0.5, content: 'init y', noMove: true, noResize: true, locked: true },
-    { x: 0, y: 2, w: 2, h: 0.5, content: '#pragma omp parallel', noMove: true, noResize: true, locked: true },
-    { x: 2, y: 2, w: 2, h: 0.5, content: 'thread 1', noMove: true, noResize: true, locked: true },
-    { x: 4, y: 2, w: 2, h: 0.5, content: 'thread 2', noMove: true, noResize: true, locked: true }
-  ]);
+  dest_grid.load(load_data.given);
 
   // removes duplicate source_grid blocks when dragged back into source_grid
   source_grid.on('dropped', function(event, prev_widget, new_widget) { // GridStackNode (data on the widget properties)
@@ -68,10 +60,12 @@ $(function() {
       var answer_html = cell.find(".grid-stack-item-content").html().trim();
       var answer_x = cell.attr("gs-x");
       var answer_y = cell.attr("gs-y");
+      var answer_w = cell.attr("gs-w");
       student_answers.push({
-        content: answer_html,
         x: answer_x,
-        y: answer_y
+        y: answer_y,
+        w: answer_w,
+        content: answer_html
       })
     }
     $(studentInputID).val(JSON.stringify(student_answers));

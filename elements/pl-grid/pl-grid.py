@@ -27,7 +27,6 @@ def prepare(element_html, data):
                         "x": int(inner_tag.get("x", 100)),
                         "y": int(inner_tag.get("y", 100)),
                         "w": 2,
-                        "h": 0.5,
                         "content": inner_tag.text_content().strip()
                     }
                     correct_answers.append(answer_data_dict)
@@ -38,7 +37,6 @@ def prepare(element_html, data):
                         "x": int(inner_tag.get("x", 100)),
                         "y": int(inner_tag.get("y", 100)),
                         "w": 2,
-                        "h": 0.5,
                         "content": inner_tag.text_content().strip()
                     }
                     given_blocks.append(given_block_dict)
@@ -49,7 +47,6 @@ def prepare(element_html, data):
                         "x": int(inner_tag.get("x", 100)),
                         "y": int(inner_tag.get("y", 100)),
                         "w": 2,
-                        "h": 0.5,
                         "content": inner_tag.text_content().strip()
                     }
                     source_blocks.append(source_block_dict)
@@ -57,8 +54,8 @@ def prepare(element_html, data):
     data["correct_answers"]["test"] = correct_answers
     data["params"]["test"] = { "source": source_blocks, "given": given_blocks }
     # print(correct_answers)
-    print(source_blocks)
-    print(given_blocks)
+    # print(source_blocks)
+    # print(given_blocks)
 
 
 
@@ -96,6 +93,7 @@ def grade(element_html, data):
     for cell in data["submitted_answers"]["test"]:
         cell["x"] = int(cell["x"])
         cell["y"] = int(cell["y"])
+        cell["w"] = int(cell["w"])
         if (cell in data["correct_answers"]["test"]):
             correct_cells += 1
         
