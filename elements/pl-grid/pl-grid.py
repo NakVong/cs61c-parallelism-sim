@@ -6,9 +6,11 @@ import chevron
 import lxml.html
 import prairielearn as pl
 class GridAnswerData(TypedDict):
-    inner_html: str
     x: int
     y: int
+    w: int
+    h: int
+    content: str
 
 def prepare(element_html, data):
     element = lxml.html.fragment_fromstring(element_html)
@@ -64,6 +66,7 @@ def render(element_html, data):
     if data["panel"] == "question":
         html_params = {
             "question": True,
+            "load_data": json.dumps(data["params"]["test"])
         }
         with open('pl-grid.mustache', 'r') as f:
             return chevron.render(f, html_params).strip()
