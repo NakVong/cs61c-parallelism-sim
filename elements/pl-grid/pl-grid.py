@@ -22,35 +22,41 @@ def prepare(element_html, data):
             for inner_tag in html_tags:
                 if inner_tag.tag == "pl-element":
                     answer_data_dict: GridAnswerData = {
-                        "inner_html": inner_tag.text_content().strip(),
                         "x": int(inner_tag.get("x", 100)),
-                        "y": int(inner_tag.get("y", 100))
+                        "y": int(inner_tag.get("y", 100)),
+                        "w": 2,
+                        "h": 0.5,
+                        "content": inner_tag.text_content().strip()
                     }
                     correct_answers.append(answer_data_dict)
         elif html_tags.tag == "pl-destination":
             for inner_tag in html_tags:
                 if inner_tag.tag == "pl-element":
                     given_block_dict: GridAnswerData = {
-                        "inner_html": inner_tag.text_content().strip(),
                         "x": int(inner_tag.get("x", 100)),
-                        "y": int(inner_tag.get("y", 100))
+                        "y": int(inner_tag.get("y", 100)),
+                        "w": 2,
+                        "h": 0.5,
+                        "content": inner_tag.text_content().strip()
                     }
                     given_blocks.append(given_block_dict)
         elif html_tags.tag == "pl-source":
             for inner_tag in html_tags:
                 if inner_tag.tag == "pl-element":
                     source_block_dict: GridAnswerData = {
-                        "inner_html": inner_tag.text_content().strip(),
                         "x": int(inner_tag.get("x", 100)),
-                        "y": int(inner_tag.get("y", 100))
+                        "y": int(inner_tag.get("y", 100)),
+                        "w": 2,
+                        "h": 0.5,
+                        "content": inner_tag.text_content().strip()
                     }
                     source_blocks.append(source_block_dict)
 
     data["correct_answers"]["test"] = correct_answers
     data["params"]["test"] = { "source": source_blocks, "given": given_blocks }
     # print(correct_answers)
-    # print(source_blocks)
-    # print(given_blocks)
+    print(source_blocks)
+    print(given_blocks)
 
 
 
@@ -76,14 +82,12 @@ def render(element_html, data):
     
 
 def parse(element_html, data):
-    element = lxml.html.fragment_fromstring(element_html)
     student_answer = data["raw_submitted_answers"].get("test-input", "[]")
     student_answer = json.loads(student_answer)
     data["submitted_answers"]["test"] = student_answer
 
 def grade(element_html, data):
     full_score_possible = len(data["correct_answers"]["test"]) - len(data["params"]["test"]["given"])
-    print(full_score_possible)
     correct_cells = 0
 
     for cell in data["submitted_answers"]["test"]:

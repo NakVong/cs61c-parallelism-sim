@@ -69,7 +69,7 @@ $(function() {
       var answer_x = cell.attr("gs-x");
       var answer_y = cell.attr("gs-y");
       student_answers.push({
-        inner_html: answer_html,
+        content: answer_html,
         x: answer_x,
         y: answer_y
       })
