@@ -19,10 +19,10 @@ $(function() {
 
   // Load items into each grid
   source_grid.load([
-    { w: 2, h: 0.5, content: 'read y' },
-    { w: 2, h: 0.5, content: 'y+' },
-    { w: 2, h: 0.5, content: 'y-' },
-    { w: 2, h: 0.5, content: 'write y' }
+    { x: 0, y: 0, w: 2, h: 0.5, content: 'read y' },
+    { x: 2, y: 0, w: 2, h: 0.5, content: 'y+' },
+    { x: 4, y: 0, w: 2, h: 0.5, content: 'y-' },
+    { x: 6, y: 0, w: 2, h: 0.5, content: 'write y' }
   ]);
 
   dest_grid.load([
