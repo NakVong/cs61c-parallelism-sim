@@ -1,0 +1,44 @@
+<pl-question-panel>
+    <p>Create a trace table that results in the following state for two threads: y = -2</p>
+    <pl-code language="c">
+        int a = 5;
+        int b = 0;
+
+        #pragma omp parallel
+        {
+            while (a > 0)
+            {
+                b = b + 2;
+                a = a - 1;
+            }
+        }
+    </pl-code>
+</pl-question-panel>
+
+
+
+<pl-grid>
+    <pl-source> <!-- elements in source grid -->
+        <pl-element x = 0 y = 0 color = "#ffffff">read b</pl-element>
+        <pl-element x = 2 y = 0 color = "#ffffff">write b</pl-element>
+        <pl-element x = 4 y = 0 color = "#ffffff">read a</pl-element>
+        <pl-element x = 6 y = 0 color = "#ffffff">write a</pl-element>
+        <pl-element x = 8 y = 0 color = "#ffffff">b++2</pl-element>
+        <pl-element x = 10 y = 0 color = "#ffffff">a--</pl-element>
+        
+    </pl-source>
+
+    <pl-destination> <!-- Define how destination grid is prepopulated -->
+        <pl-element x = 0 y = 0 color = "#d8bfd8">Main</pl-element>
+        <pl-element x = 0 y = 1 color = "#d8bfd8">init a</pl-element>
+        <pl-element x = 0 y = 2 color = "#d8bfd8">init b</pl-element>
+        <pl-element x = 0 y = 3 color = "#d8bfd8">#pragma omp parallel</pl-element>
+        <pl-element x = 2 y = 3 color = "#f08080">thread 1</pl-element>
+        <pl-element x = 4 y = 3 color = "#e0ffff">thread 2</pl-element>  
+    </pl-destination>
+    
+    <pl-answer-grid> <!-- Define solution grid (not shown to student) -->
+        <pl-element x = 0 y = 0 color = "green">Main</pl-element>
+    </pl-answer-grid>
+</pl-grid>
+
