@@ -1,4 +1,5 @@
 import random
+import math
 import json
 from typing import TypedDict
 
@@ -101,7 +102,7 @@ def grade(element_html, data):
     score -= (len(data["params"]["test"]["given"]) / full_score_possible)
     
     data["partial_scores"]["test"] = {
-        "score": score,
+        "score": math.ceil(score),
         "feedback": f"{correct_cells} out of {full_score_possible} cells matched.",
     }
         
