@@ -1,5 +1,4 @@
-const elementColors = {"main" : "#d8bfd8", "init y" :"#d8bfd8", "#pragma omp parallel" : "#d8bfd8", "thread 1" : "#f08080", "thread 2" : "	#e0ffff"};
-// const elementClasses = {"main" : [], "thread 1" : [], "thread 2" : []};
+const elementColors = {"main" : "#d8bfd8", "init a" :"#d8bfd8", "init b" :"#d8bfd8", "init n" :"#d8bfd8", "init total" :"#d8bfd8", "#pragma omp parallel num_threads(2)" : "#d8bfd8", "#pragma omp parallel num_threads(3)" : "#d8bfd8", "thread 1" : "#f08080", "thread 2" : "	#e0ffff", "thread 3": "#ccffcc"};
 const destID = "#grid2";
 const studentInputID = "#answer-input"
 const loadDataID = "#load-data"
@@ -35,6 +34,8 @@ $(function() {
     if (duplicate_found) {
       source_grid.removeWidget(new_widget.el); 
     }
+
+    setAnswer();
   });
 
   // duplicate source_grid blocks when dragged out of source_grid into dest_grid

@@ -88,21 +88,32 @@ def parse(element_html, data):
     data["submitted_answers"]["test"] = student_answer
 
 def grade(element_html, data):
-    full_score_possible = len(data["correct_answers"]["test"]) - len(data["params"]["test"]["given"])
+    given = data["params"]["test"]["given"]
+    correct_answers = data["correct_answers"]["test"]
+    submitted = data["submitted_answers"]["test"]
+
+    full_score_possible = len(correct_answers) - len(given)
     correct_cells = 0
 
-    for cell in data["submitted_answers"]["test"]:
+    for cell in submitted:
         cell["x"] = int(cell["x"])
         cell["y"] = int(cell["y"])
         cell["w"] = int(cell["w"])
-        if (cell in data["correct_answers"]["test"]):
+
+        if (cell in correct_answers):
             correct_cells += 1
         
-    score = correct_cells / full_score_possible if full_score_possible > 0 else 0
-    score -= (len(data["params"]["test"]["given"]) / full_score_possible)
+    if full_score_possible > 0:
+        score = (correct_cells - len(given)) / full_score_possible
+        score = max(score, 0)  # don't allow negative scores
+    else:
+        score = 0
+
+    if score >= 0.99:
+        score = 1
     
     data["partial_scores"]["test"] = {
-        "score": math.ceil(score),
+        "score": score,
         "feedback": f"{correct_cells} out of {full_score_possible} cells matched.",
     }
         

@@ -1,17 +1,17 @@
 <pl-question-panel>
     <p>Create a trace table that results in the following state for two threads: y = -2</p>
     <pl-code language="c">
-        int n = 6;
-        int total = 0;
+    int n = 6;
+    int total = 0;
 
-        #pragma omp parallel num_threads(3)
+    #pragma omp parallel num_threads(3)
+    {
+        while (n > 0)
         {
-            while (n > 0)
-            {
-                total = total + 3;
-                n = n - 1;
-            }
+            total = total + 3;
+            n = n - 1;
         }
+    }
 
     </pl-code>
 </pl-question-panel>
@@ -21,16 +21,15 @@
 <pl-grid>
     <pl-source> <!-- elements in source grid -->
         <pl-element x = 0 y = 0 color = "#ffffff">read total</pl-element>
-        <pl-element x = 2 y = 0 color = "#ffffff">write total</pl-element>
-        <pl-element x = 4 y = 0 color = "#ffffff">read n</pl-element>
-        <pl-element x = 6 y = 0 color = "#ffffff">write n</pl-element>
-        <pl-element x = 8 y = 0 color = "#ffffff">total++3</pl-element>
-        <pl-element x = 10 y = 0 color = "#ffffff">n--</pl-element>
-        
+        <pl-element x = 2 y = 0 color = "#ffffff">total++3</pl-element>
+        <pl-element x = 4 y = 0 color = "#ffffff">write total</pl-element>
+        <pl-element x = 6 y = 0 color = "#ffffff">read n</pl-element>
+        <pl-element x = 8 y = 0 color = "#ffffff">n--</pl-element>
+        <pl-element x = 10 y = 0 color = "#ffffff">write n</pl-element>
     </pl-source>
 
     <pl-destination> <!-- Define how destination grid is prepopulated -->
-        <pl-element x = 0 y = 0 color = "#d8bfd8">Main</pl-element>
+        <pl-element x = 0 y = 0 color = "#d8bfd8">main</pl-element>
         <pl-element x = 0 y = 1 color = "#d8bfd8">init n</pl-element>
         <pl-element x = 0 y = 2 color = "#d8bfd8">init total</pl-element>
         <pl-element x = 0 y = 3 color = "#d8bfd8">#pragma omp parallel num_threads(3)</pl-element>
