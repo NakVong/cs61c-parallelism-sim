@@ -3,25 +3,25 @@ const destID = "#grid2";
 const studentInputID = "#answer-input"
 const loadDataID = "#load-data"
 const loadDataSubID = "#load-data-sub"
+const loadDataSolID = "#load-data-sol"
 
 $(function() {
-
-  const load_data = JSON.parse($(loadDataID).val())
+  
+  // question only
+  const load_data = JSON.parse($(loadDataID).val());
   
   let source_options = {
     acceptWidgets: true, // Allow dropping items from other grids
     float: false
   };
-  let source_grid = GridStack.init(source_options, '.source-grid')
+  let source_grid = GridStack.init(source_options, '.source-grid');
+  source_grid.load(load_data.source);
 
   let dest_options = {
     acceptWidgets: true, // Allow dropping items from other grids
     float: true, // Freeform (without this it tries to minimize free space)
   };
-  let dest_grid = GridStack.init(dest_options, 'dest-grid')
-
-  // Load items into each grid
-  source_grid.load(load_data.source);
+  let dest_grid = GridStack.init(dest_options, 'dest-grid');
   dest_grid.load(load_data.given);
 
   setColorByMapping('grid2', elementColors); // set prepoulated blocks with colors
@@ -44,7 +44,7 @@ $(function() {
         acceptWidgets: true,
         float: true
       };
-      let sub_grid = GridStack.init(sub_options, ".sub-grid");
+      sub_grid = GridStack.init(sub_options, ".sub-grid");
       sub_grid.load(load_data_sub);
 
       setColorSubmission(sub_grid, elementColors);
@@ -52,6 +52,29 @@ $(function() {
   }
 
   // solution only
+  let load_data_sol = [];
+  const loadDataSolEl = $(loadDataSolID);
+
+  if (loadDataSolEl.length > 0) {
+    try {
+      load_data_sol = JSON.parse(loadDataSolEl.val());
+    } catch (e) {
+      console.warn("Invalid or missing #load-data-sol JSON");
+    }
+
+    let sol_grid;
+
+    if (Array.isArray(load_data_sol) && load_data_sol.length > 0) {
+      let sol_options = {
+        acceptWidgets: true,
+        float: false
+      };
+      sol_grid = GridStack.init(sol_options, '.sol-grid');
+      sol_grid.load(load_data_sol);
+
+      setColorSubmission(sol_grid, elementColors);
+    }
+  }
   
 
   // removes duplicate source_grid blocks when dragged back into source_grid
@@ -97,7 +120,7 @@ $(function() {
         y: answer_y,
         w: answer_w,
         content: answer_html
-      })
+      });
     }
     $(studentInputID).val(JSON.stringify(student_answers));
   }
