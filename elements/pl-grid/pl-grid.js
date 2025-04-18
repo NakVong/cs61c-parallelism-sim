@@ -2,6 +2,7 @@ const elementColors = {"main" : "#d8bfd8", "init a" :"#d8bfd8", "init b" :"#d8bf
 const destID = "#grid2";
 const studentInputID = "#answer-input"
 const loadDataID = "#load-data"
+const loadDataSubID = "#load-data-sub"
 
 $(function() {
 
@@ -11,18 +12,41 @@ $(function() {
     acceptWidgets: true, // Allow dropping items from other grids
     float: false
   };
+  let source_grid = GridStack.init(source_options, '.source-grid')
+
   let dest_options = {
     acceptWidgets: true, // Allow dropping items from other grids
     float: true, // Freeform (without this it tries to minimize free space)
   };
-
-  let source_grid = GridStack.init(source_options, '.source-grid')
   let dest_grid = GridStack.init(dest_options, 'dest-grid')
 
   // Load items into each grid
   source_grid.load(load_data.source);
 
   dest_grid.load(load_data.given);
+
+  setColorByThread('grid2', elementColors);
+
+  let load_data_sub = [];
+  const loadDataSubEl = $(loadDataSubID);
+
+  if (loadDataSubEl.length > 0) {
+    try {
+      load_data_sub = JSON.parse(loadDataSubEl.val());
+    } catch (e) {
+      console.warn("Invalid or missing #load-data-sub JSON");
+    }
+
+    if (Array.isArray(load_data_sub) && load_data_sub.length > 0) {
+      let sub_options = {
+        acceptWidgets: true,
+        float: true
+      };
+      let sub_grid = GridStack.init(sub_options, ".sub-grid");
+      sub_grid.load(load_data_sub);
+    }
+
+  }
 
   // removes duplicate source_grid blocks when dragged back into source_grid
   source_grid.on('dropped', function(event, prev_widget, new_widget) { // GridStackNode (data on the widget properties)
@@ -45,7 +69,7 @@ $(function() {
     );
     let widget_data = { x: new_widget.x, y: new_widget.y, content: new_widget.content }
     // console.log(widget_data);
-    setColorToThread(new_widget.el);
+    setColorToThread(dest_grid, new_widget.el);
 
     setAnswer();
 
@@ -73,10 +97,10 @@ $(function() {
   }
 
   // check column for thread and applies same color
-  function setColorToThread(new_widget) {
+  function setColorToThread(grid, new_widget) {
     let column = new_widget.getAttribute('gs-x');
     // console.log(column);
-    let existing_widgets = dest_grid.getGridItems();
+    let existing_widgets = grid.getGridItems();
     let color = null;
     
     existing_widgets.forEach(widget_element => {
@@ -112,6 +136,6 @@ $(function() {
       }
     });
   }
-  setColorByThread('grid2', elementColors);
+  
   
 });

@@ -71,6 +71,7 @@ def render(element_html, data):
     elif data["panel"] == "submission":
         html_params = {
             "submission": True,
+            "load_data_sub": json.dumps(data["submitted_answers"].get("test", []))
         }
         with open('pl-grid.mustache', 'r') as f:
             return chevron.render(f, html_params).strip()
