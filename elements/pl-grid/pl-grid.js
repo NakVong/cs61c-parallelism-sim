@@ -22,11 +22,11 @@ $(function() {
 
   // Load items into each grid
   source_grid.load(load_data.source);
-
   dest_grid.load(load_data.given);
 
-  setColorByThread('grid2', elementColors);
+  setColorByMapping('grid2', elementColors); // set prepoulated blocks with colors
 
+  // submission only
   let load_data_sub = [];
   const loadDataSubEl = $(loadDataSubID);
 
@@ -37,6 +37,8 @@ $(function() {
       console.warn("Invalid or missing #load-data-sub JSON");
     }
 
+    let sub_grid;
+
     if (Array.isArray(load_data_sub) && load_data_sub.length > 0) {
       let sub_options = {
         acceptWidgets: true,
@@ -44,9 +46,13 @@ $(function() {
       };
       let sub_grid = GridStack.init(sub_options, ".sub-grid");
       sub_grid.load(load_data_sub);
-    }
 
+      setColorSubmission(sub_grid, elementColors);
+    }    
   }
+
+  // solution only
+  
 
   // removes duplicate source_grid blocks when dragged back into source_grid
   source_grid.on('dropped', function(event, prev_widget, new_widget) { // GridStackNode (data on the widget properties)
@@ -69,7 +75,7 @@ $(function() {
     );
     let widget_data = { x: new_widget.x, y: new_widget.y, content: new_widget.content }
     // console.log(widget_data);
-    setColorToThread(dest_grid, new_widget.el);
+    setColorByThread(dest_grid, new_widget.el);
 
     setAnswer();
 
@@ -97,18 +103,18 @@ $(function() {
   }
 
   // check column for thread and applies same color
-  function setColorToThread(grid, new_widget) {
-    let column = new_widget.getAttribute('gs-x');
+  function setColorByThread(grid, new_widget_el) {
+    let column = new_widget_el.getAttribute('gs-x');
     // console.log(column);
     let existing_widgets = grid.getGridItems();
     let color = null;
     
-    existing_widgets.forEach(widget_element => {
+    existing_widgets.forEach(widget_element_html => {
       // Check if the widget is in the same column
-      let widget_column = widget_element.getAttribute('gs-x');
+      let widget_column = widget_element_html.getAttribute('gs-x');
       // console.log(widget_column);
       if (column === widget_column) {
-        let text = $(widget_element).text();  // Ensure no extra spaces
+        let text = $(widget_element_html).text();  // Ensure no extra spaces
         // console.log('Checking widget text:', text);  // Log the text being checked
         if (text in elementColors) {
           color = elementColors[text];
@@ -119,16 +125,15 @@ $(function() {
     });
   
     if (color) {
-      $(new_widget).find('.grid-stack-item-content').css('background-color', color);
+      $(new_widget_el).find('.grid-stack-item-content').css('background-color', color);
     } else {
       console.log('No color found for column:', column);  // Log if no color is found
     }
   }
-  
 
   // After loading, select which elements you want to change the background color for.
   // Gridstack doesn't support element classes unfortunately so need to set color manually after loading
-  function setColorByThread(grid, elementColors) {
+  function setColorByMapping(grid, elementColors) {
     $('#' + grid + ' .grid-stack-item-content').each(function() {
       let text = $(this).text(); 
       if (text in elementColors) { 
@@ -137,5 +142,32 @@ $(function() {
     });
   }
   
-  
+  function setColorSubmission(grid, elementColors) {
+    setColorByMapping(grid.el.id, elementColors);
+
+    let existing_widgets = grid.getGridItems();
+    let color_mapping = {};
+    
+    // First pass: determine a color for each column
+    existing_widgets.forEach(widget_element_html => {
+      const widget_column = widget_element_html.getAttribute('gs-x');
+      const content = $(widget_element_html).find('.grid-stack-item-content').text().trim();
+
+      // Assign the first found color in this column
+      if (!(widget_column in color_mapping) && content in elementColors) {
+        color_mapping[widget_column] = elementColors[content];
+      }
+    });
+
+    // Second pass: apply that color to all widgets in the same column
+    existing_widgets.forEach(widget_element_html => {
+      const widget_column = widget_element_html.getAttribute('gs-x');
+      const color = color_mapping[widget_column];
+      if (color) {
+        $(widget_element_html).find('.grid-stack-item-content').css('background-color', color);
+      }
+    });
+
+    console.log(color_mapping)
+  }
 });

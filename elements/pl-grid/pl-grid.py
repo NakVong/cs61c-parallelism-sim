@@ -78,6 +78,7 @@ def render(element_html, data):
     elif data["panel"] == "true_answer":
         html_params = {
             "true_answer": True,
+            "load_data_sol": json.dumps(data["correct_answers"]["test"])
         }
         with open('pl-grid.mustache', 'r') as f:
             return chevron.render(f, html_params).strip()
