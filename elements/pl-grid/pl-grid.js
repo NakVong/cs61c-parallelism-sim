@@ -67,9 +67,10 @@ $(function() {
     if (Array.isArray(load_data_sol) && load_data_sol.length > 0) {
       let sol_options = {
         acceptWidgets: true,
-        float: false
+        float: true
       };
       sol_grid = GridStack.init(sol_options, '.sol-grid');
+      console.log(load_data_sol)
       sol_grid.load(load_data_sol);
 
       setColorSubmission(sol_grid, elementColors);
