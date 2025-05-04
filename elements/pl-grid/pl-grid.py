@@ -61,9 +61,6 @@ def prepare(element_html, data):
 
     data["correct_answers"]["test"] = correct_answers
     data["params"]["test"] = { "source": source_blocks, "given": given_blocks, "colors": color_map }
-    # print(correct_answers)
-    # print(source_blocks)
-    # print(given_blocks)
 
 def render(element_html, data):
     if data["panel"] == "question":
@@ -73,10 +70,20 @@ def render(element_html, data):
         }
         with open('pl-grid.mustache', 'r') as f:
             return chevron.render(f, html_params).strip()
+    # elif data["panel"] == "submission":
+    #     html_params = {
+    #         "submission": True,
+    #         "load_data_sub": json.dumps(data["submitted_answers"].get("test", []))
+    #     }
+    #     with open('pl-grid.mustache', 'r') as f:
+    #         return chevron.render(f, html_params).strip()
     elif data["panel"] == "submission":
+        all_submissions = data["submitted_answers"].get("test", [])
+        latest_submission = all_submissions[-1] if all_submissions else []
+
         html_params = {
             "submission": True,
-            "load_data_sub": json.dumps(data["submitted_answers"].get("test", []))
+            "load_data_sub": json.dumps(latest_submission)
         }
         with open('pl-grid.mustache', 'r') as f:
             return chevron.render(f, html_params).strip()
@@ -89,16 +96,26 @@ def render(element_html, data):
             return chevron.render(f, html_params).strip()
     
 
+# def parse(element_html, data):
+#     student_answer = data["raw_submitted_answers"].get("test-input", "[]")
+#     student_answer = json.loads(student_answer)
+#     data["submitted_answers"]["test"] = student_answer
 def parse(element_html, data):
-    student_answer = data["raw_submitted_answers"].get("test-input", "[]")
-    student_answer = json.loads(student_answer)
-    data["submitted_answers"]["test"] = student_answer
+    new_submission = json.loads(data["raw_submitted_answers"].get("test-input", "[]"))
+    
+    # Initialize as list of submissions if not already
+    if "test" not in data["submitted_answers"] or not isinstance(data["submitted_answers"]["test"], list):
+        data["submitted_answers"]["test"] = []
+
+    data["submitted_answers"]["test"].append(new_submission)
+
 
 def grade(element_html, data):
     given = data["params"]["test"]["given"]
     correct_answers = data["correct_answers"]["test"]
-    submitted = data["submitted_answers"]["test"]
+    all_submissions = data["submitted_answers"]["test"]
 
+    submitted = all_submissions[-1]
     full_score_possible = len(correct_answers) - len(given)
     correct_cells = 0
 
@@ -123,9 +140,3 @@ def grade(element_html, data):
         "score": score,
         "feedback": f"{correct_cells} out of {full_score_possible} cells matched.",
     }
-        
-    # for cell in data["correct_answers"]["test"]:
-    #     print(cell)
-
-    # for cell in data["submitted_answers"]["test"]:
-    #     print(cell)

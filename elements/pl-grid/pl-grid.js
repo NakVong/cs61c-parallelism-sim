@@ -1,120 +1,115 @@
-const destID = "#grid2";
-const studentInputID = "#answer-input"
-const loadDataID = "#load-data"
-const loadDataSubID = "#load-data-sub"
-const loadDataSolID = "#load-data-sol"
-
 $(function() {
-  
-  // question only
-  const load_data = JSON.parse($(loadDataID).val());
+  /* for question panel */
+  const question_data = JSON.parse($("#question-data").val()); 
+  const colors = question_data.colors; // all of the color assignments specified by the instructor
   
   let source_options = {
-    acceptWidgets: true, // Allow dropping items from other grids
+    acceptWidgets: true, // allow dropping items from other grids (for deleting)
     float: false
   };
   let source_grid = GridStack.init(source_options, '.source-grid');
-  source_grid.load(load_data.source);
+  source_grid.load(question_data.source);
 
-  let dest_options = {
-    acceptWidgets: true, // Allow dropping items from other grids
-    float: true, // Freeform (without this it tries to minimize free space)
+  initGridColors('source-grid-id', colors); // source blocks are colored
+
+  let destination_options = {
+    acceptWidgets: true, // allow dropping items from other grids (for solution construction)
+    float: true, // prevent auto-rearranging that minimizes free space
   };
-  let dest_grid = GridStack.init(dest_options, 'dest-grid');
-  dest_grid.load(load_data.given);
+  let destination_grid = GridStack.init(destination_options, '.dest-grid');
+  destination_grid.load(question_data.given);
+  
+  initGridColors('dest-grid-id', colors); // if prepoluation was set, dest blocks are colored
 
-  setColorByMapping('grid2', load_data.colors); // set prepoulated blocks with colors
+  /* for submission panel */
+  let submission_data = []; 
+  const submission_data_element = $("#submission-data"); 
 
-  // submission only
-  let load_data_sub = [];
-  const loadDataSubEl = $(loadDataSubID);
-
-  if (loadDataSubEl.length > 0) {
+  if (submission_data_element.length > 0) {
     try {
-      load_data_sub = JSON.parse(loadDataSubEl.val());
+      submission_data = JSON.parse(submission_data_element.val());
     } catch (e) {
       console.warn("Invalid or missing #load-data-sub JSON");
     }
 
-    let sub_grid;
+    let submission_grid;
 
-    if (Array.isArray(load_data_sub) && load_data_sub.length > 0) {
-      let sub_options = {
-        acceptWidgets: true,
+    if (Array.isArray(submission_data) && submission_data.length > 0) {
+      let submission_options = {
+        acceptWidgets: false,
         float: true
       };
-      sub_grid = GridStack.init(sub_options, ".sub-grid");
-      sub_grid.load(load_data_sub);
+      submission_grid = GridStack.init(submission_options, ".sub-grid");
+      submission_grid.load(submission_data);
 
-      setColorSubmission(sub_grid, elementColors);
+      setColorComplete(submission_grid, colors);
     }    
   }
 
-  // solution only
-  let load_data_sol = [];
-  const loadDataSolEl = $(loadDataSolID);
+  /* for solution panel */
+  let solution_data = []; 
+  const solution_data_element = $("#solution-data");
 
-  if (loadDataSolEl.length > 0) {
+  if (solution_data_element.length > 0) {
     try {
-      load_data_sol = JSON.parse(loadDataSolEl.val());
+      solution_data = JSON.parse(solution_data_element.val());
     } catch (e) {
       console.warn("Invalid or missing #load-data-sol JSON");
     }
 
-    let sol_grid;
+    let solution_grid;
 
-    if (Array.isArray(load_data_sol) && load_data_sol.length > 0) {
-      let sol_options = {
-        acceptWidgets: true,
+    if (Array.isArray(solution_data) && solution_data.length > 0) {
+      let solution_options = {
+        acceptWidgets: false,
         float: true
       };
-      sol_grid = GridStack.init(sol_options, '.sol-grid');
-      console.log(load_data_sol)
-      sol_grid.load(load_data_sol);
+      solution_grid = GridStack.init(solution_options, '.sol-grid');
+      solution_grid.load(solution_data);
 
-      setColorSubmission(sol_grid, elementColors);
+      setColorComplete(solution_grid, colors);
     }
   }
   
 
   // removes duplicate source_grid blocks when dragged back into source_grid
-  source_grid.on('dropped', function(event, prev_widget, new_widget) { // GridStackNode (data on the widget properties)
-    let existing_widgets = source_grid.getGridItems(); // array of GridStackHTMLElement (DOM Element)
-    let duplicate_found = existing_widgets.some(widget_element => { 
-      let node = widget_element.gridstackNode; // Each GridStackHTMLElement has reference to GridStackNode
+  source_grid.on('dropped', function(event, prev_widget, new_widget) { 
+    let existing_widgets = source_grid.getGridItems();
+
+    let duplicate_found = existing_widgets.some(widget_element_html => { 
+      let node = widget_element_html.gridstackNode; 
       return node.id == new_widget.id; 
     });
     if (duplicate_found) {
       source_grid.removeWidget(new_widget.el); 
     }
 
-    setAnswer();
+    setAnswer(); // update student answer
   });
 
-  // duplicate source_grid blocks when dragged out of source_grid into dest_grid
-  dest_grid.on('dropped', function(event, prev_widget, new_widget) {
+  // duplicate blocks when dragged out of source_grid into destination_grid
+  destination_grid.on('dropped', function(event, prev_widget, new_widget) {
     source_grid.addWidget(
       { w: prev_widget.w, h: prev_widget.h, content: prev_widget.content, id: prev_widget.id }
     );
-    let widget_data = { x: new_widget.x, y: new_widget.y, content: new_widget.content }
-    // console.log(widget_data);
-    setColorByThread(dest_grid, new_widget.el);
 
-    setAnswer();
+    setColumnColor(destination_grid, new_widget.el);
 
-    console.log("Current hidden input value:", $(studentInputID).val());
+    setAnswer(); // update student answer
   });
 
-  // updates the values in the hidden input field
+  // updates the student's answer in the hidden input field
   function setAnswer() {
-    var grid_cells = $(destID).children(); 
-    var student_answers = [];
+    let grid_cells = $(".dest-grid").children(); 
+    let student_answers = [];
+
     for (const grid_cell of grid_cells) {
-      var cell = $(grid_cell) // convert DOM to JQuery Object
-      var answer_html = cell.find(".grid-stack-item-content").html().trim();
-      var answer_x = cell.attr("gs-x");
-      var answer_y = cell.attr("gs-y");
-      var answer_w = cell.attr("gs-w");
+      let cell = $(grid_cell) // convert DOM to JQuery Object
+      let answer_html = cell.find(".grid-stack-item-content").html().trim();
+      let answer_x = cell.attr("gs-x");
+      let answer_y = cell.attr("gs-y");
+      let answer_w = cell.attr("gs-w");
+
       student_answers.push({
         x: answer_x,
         y: answer_y,
@@ -122,75 +117,71 @@ $(function() {
         content: answer_html
       });
     }
-    $(studentInputID).val(JSON.stringify(student_answers));
+
+    $("#answer-input").val(JSON.stringify(student_answers));
   }
 
-  // check column for thread and applies same color
-  function setColorByThread(grid, new_widget_el) {
+  // applies same color to the new block as the ones in the same column 
+  function setColumnColor(grid, new_widget_el) {
     let column = new_widget_el.getAttribute('gs-x');
-    // console.log(column);
     let existing_widgets = grid.getGridItems();
     let color = null;
     
-    existing_widgets.forEach(widget_element_html => {
-      // Check if the widget is in the same column
+    for (const widget_element_html of existing_widgets) {
       let widget_column = widget_element_html.getAttribute('gs-x');
-      // console.log(widget_column);
       if (column === widget_column) {
-        let text = $(widget_element_html).text();  // Ensure no extra spaces
-        // console.log('Checking widget text:', text);  // Log the text being checked
-        if (text in elementColors) {
-          color = elementColors[text];
-          // console.log('Color found:', color);  // Log the color being applied
-          return false;  // Exit the loop once color is found
+        let text = $(widget_element_html).text().trim();
+        // console.log('Checking widget text:', text);
+        if (text in colors) {
+          color = colors[text];
+          // console.log('Color found:', color);
+          break; 
         }
       }
-    });
+    }
   
     if (color) {
       $(new_widget_el).find('.grid-stack-item-content').css('background-color', color);
     } else {
-      console.log('No color found for column:', column);  // Log if no color is found
+      console.log('No color found for column:', column); 
     }
   }
 
-  // After loading, select which elements you want to change the background color for.
-  // Gridstack doesn't support element classes unfortunately so need to set color manually after loading
-  function setColorByMapping(grid, elementColors) {
-    $('#' + grid + ' .grid-stack-item-content').each(function() {
+  // colors block based on color assignments set by the instructor
+  function initGridColors(grid_id, colors) {
+    $('#' + grid_id + ' .grid-stack-item-content').each(function() {
       let text = $(this).text(); 
-      if (text in elementColors) { 
-        $(this).css('background-color', elementColors[text]); 
+      if (text in colors) { 
+        $(this).css('background-color', colors[text]); 
       }
     });
   }
   
-  function setColorSubmission(grid, elementColors) {
-    setColorByMapping(grid.el.id, elementColors);
+  // colors all of the blocks in each submission panel
+  function setColorComplete(grid, colors) {
+    initGridColors(grid.el.id, colors); // submission blocks are colored (only ones that were in original mappings)
 
     let existing_widgets = grid.getGridItems();
     let color_mapping = {};
     
-    // First pass: determine a color for each column
-    existing_widgets.forEach(widget_element_html => {
+    // first pass: determine a color for each column
+    for (const widget_element_html of existing_widgets) {
       const widget_column = widget_element_html.getAttribute('gs-x');
       const content = $(widget_element_html).find('.grid-stack-item-content').text().trim();
 
-      // Assign the first found color in this column
-      if (!(widget_column in color_mapping) && content in elementColors) {
-        color_mapping[widget_column] = elementColors[content];
+      // assign the first found color in this column
+      if (!(widget_column in color_mapping) && content in colors) {
+        color_mapping[widget_column] = colors[content];
       }
-    });
+    }
 
-    // Second pass: apply that color to all widgets in the same column
-    existing_widgets.forEach(widget_element_html => {
+    // second pass: apply that color to all widgets in the same column
+    for (const widget_element_html of existing_widgets) {
       const widget_column = widget_element_html.getAttribute('gs-x');
       const color = color_mapping[widget_column];
       if (color) {
         $(widget_element_html).find('.grid-stack-item-content').css('background-color', color);
       }
-    });
-
-    console.log(color_mapping)
+    }
   }
 });
