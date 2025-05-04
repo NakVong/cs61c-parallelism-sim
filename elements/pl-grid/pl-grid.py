@@ -70,23 +70,21 @@ def render(element_html, data):
         }
         with open('pl-grid.mustache', 'r') as f:
             return chevron.render(f, html_params).strip()
-    # elif data["panel"] == "submission":
-    #     html_params = {
-    #         "submission": True,
-    #         "load_data_sub": json.dumps(data["submitted_answers"].get("test", []))
-    #     }
-    #     with open('pl-grid.mustache', 'r') as f:
-    #         return chevron.render(f, html_params).strip()
+        
     elif data["panel"] == "submission":
         all_submissions = data["submitted_answers"].get("test", [])
-        latest_submission = all_submissions[-1] if all_submissions else []
 
         html_params = {
             "submission": True,
-            "load_data_sub": json.dumps(latest_submission)
+            "student_submission": [
+                {"load_data_sub": json.dumps(sub)} for sub in all_submissions
+            ]
         }
+
         with open('pl-grid.mustache', 'r') as f:
             return chevron.render(f, html_params).strip()
+
+        
     elif data["panel"] == "answer":
         html_params = {
             "true_answer": True,
@@ -104,7 +102,7 @@ def parse(element_html, data):
     new_submission = json.loads(data["raw_submitted_answers"].get("test-input", "[]"))
     
     # Initialize as list of submissions if not already
-    if "test" not in data["submitted_answers"] or not isinstance(data["submitted_answers"]["test"], list):
+    if "test" not in data["submitted_answers"]:
         data["submitted_answers"]["test"] = []
 
     data["submitted_answers"]["test"].append(new_submission)

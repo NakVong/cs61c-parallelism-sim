@@ -22,29 +22,25 @@ $(function() {
   initGridColors('dest-grid-id', colors); // if prepoluation was set, dest blocks are colored
 
   /* for submission panel */
-  let submission_data = []; 
-  const submission_data_element = $("#submission-data"); 
-
-  if (submission_data_element.length > 0) {
+  document.querySelectorAll('.submission-data').forEach((inputEl, index) => {
+    let submissionData;
     try {
-      submission_data = JSON.parse(submission_data_element.val());
+      submissionData = JSON.parse(inputEl.value);
     } catch (e) {
-      console.warn("Invalid or missing #load-data-sub JSON");
+      console.warn("Bad submission JSON", e);
+      return;
     }
-
-    let submission_grid;
-
-    if (Array.isArray(submission_data) && submission_data.length > 0) {
-      let submission_options = {
-        acceptWidgets: false,
-        float: true
-      };
-      submission_grid = GridStack.init(submission_options, ".sub-grid");
-      submission_grid.load(submission_data);
-
-      setColorComplete(submission_grid, colors);
-    }    
-  }
+  
+    const gridContainer = inputEl.previousElementSibling; // the .sub-grid div
+    const grid = GridStack.init({
+      float: true,
+      acceptWidgets: false
+    }, gridContainer);
+  
+    grid.load(submissionData);
+    setColorComplete(grid, colors);  // your coloring logic
+  });
+  
 
   /* for solution panel */
   let solution_data = []; 

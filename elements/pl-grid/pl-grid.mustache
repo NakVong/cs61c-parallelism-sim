@@ -19,22 +19,24 @@
   <input id="question-data" type="hidden" name="test-load-data" value='{{{load_data}}}'/>
 
 {{/question}}
+
 {{#submission}}
+  {{#student_submission}}
+    <div class="card-header pl-grid-header list-group-item-primary">
+      <span class="me-2">Your solution here</span>
+    </div>
+    <div class="grid-stack sub-grid" id="sub-grid-id"></div>
 
-  <div class="card-header pl-grid-header list-group-item-primary">
-    <span class="me-2">Your solution here</span>
-  </div>
-  <div class="grid-stack sub-grid" id="grid3"></div>
-
-  <input id="submission-data" type="hidden" name="test-load-data-sub" value='{{{load_data_sub}}}'/>
-
+    <input class="submission-data" type="hidden" name="test-load-data-sub" value='{{{load_data_sub}}}'/>
+  {{/student_submission}}
 {{/submission}}
+
 {{#true_answer}}
 
   <div class="card-header pl-grid-header list-group-item-primary">
     <span class="me-2">Your solution here</span>
   </div>
-  <div class="grid-stack sol-grid" id="grid4"></div>
+  <div class="grid-stack sol-grid" id="sol-grid-id"></div>
 
   <input id="solution-data" type="hidden" name="test-load-data-sol" value='{{{load_data_sol}}}'/>
 
