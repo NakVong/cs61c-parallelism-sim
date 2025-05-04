@@ -19,6 +19,7 @@ def prepare(element_html, data):
     correct_answers: list[GridAnswerData] = []
     source_blocks: list[GridAnswerData] = []
     given_blocks: list[GridAnswerData] = []
+    color_map: dict = {}
 
     for html_tags in element:
         if html_tags.tag == "pl-answer-grid":
@@ -34,26 +35,32 @@ def prepare(element_html, data):
         elif html_tags.tag == "pl-destination":
             for inner_tag in html_tags:
                 if inner_tag.tag == "pl-element":
+                    content = inner_tag.text_content().strip()
                     given_block_dict: GridAnswerData = {
                         "x": int(inner_tag.get("x", 100)),
                         "y": int(inner_tag.get("y", 100)),
                         "w": 2,
-                        "content": inner_tag.text_content().strip()
+                        "content": content
                     }
                     given_blocks.append(given_block_dict)
+                    color = inner_tag.get("color", "#ffffff")
+                    color_map[content] = color
         elif html_tags.tag == "pl-source":
             for inner_tag in html_tags:
                 if inner_tag.tag == "pl-element":
+                    content = inner_tag.text_content().strip()
                     source_block_dict: GridAnswerData = {
                         "x": int(inner_tag.get("x", 100)),
                         "y": int(inner_tag.get("y", 100)),
                         "w": 2,
-                        "content": inner_tag.text_content().strip()
+                        "content": content
                     }
                     source_blocks.append(source_block_dict)
+                    color = inner_tag.get("color", "#ffffff")
+                    color_map[content] = color
 
     data["correct_answers"]["test"] = correct_answers
-    data["params"]["test"] = { "source": source_blocks, "given": given_blocks }
+    data["params"]["test"] = { "source": source_blocks, "given": given_blocks, "colors": color_map }
     # print(correct_answers)
     # print(source_blocks)
     # print(given_blocks)
@@ -76,7 +83,7 @@ def render(element_html, data):
     elif data["panel"] == "answer":
         html_params = {
             "true_answer": True,
-            "load_data_sol": json.dumps(data["correct_answers"]["test"])
+            "load_data_sol": json.dumps(data["correct_answers"].get("test", []))
         }
         with open('pl-grid.mustache', 'r') as f:
             return chevron.render(f, html_params).strip()

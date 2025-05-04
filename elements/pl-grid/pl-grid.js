@@ -1,4 +1,3 @@
-const elementColors = {"main" : "#d8bfd8", "init a" :"#d8bfd8", "init b" :"#d8bfd8", "init n" :"#d8bfd8", "init total" :"#d8bfd8", "#pragma omp parallel num_threads(2)" : "#d8bfd8", "#pragma omp parallel num_threads(3)" : "#d8bfd8", "thread 1" : "#f08080", "thread 2" : "	#e0ffff", "thread 3": "#ccffcc"};
 const destID = "#grid2";
 const studentInputID = "#answer-input"
 const loadDataID = "#load-data"
@@ -24,7 +23,7 @@ $(function() {
   let dest_grid = GridStack.init(dest_options, 'dest-grid');
   dest_grid.load(load_data.given);
 
-  setColorByMapping('grid2', elementColors); // set prepoulated blocks with colors
+  setColorByMapping('grid2', load_data.colors); // set prepoulated blocks with colors
 
   // submission only
   let load_data_sub = [];
