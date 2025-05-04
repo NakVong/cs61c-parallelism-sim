@@ -58,9 +58,11 @@ def prepare(element_html, data):
                     source_blocks.append(source_block_dict)
                     color = inner_tag.get("color", "#ffffff")
                     color_map[content] = color
+    
+    color_column = element.get("color-column", "false").lower() == "true"
 
     data["correct_answers"]["test"] = correct_answers
-    data["params"]["test"] = { "source": source_blocks, "given": given_blocks, "colors": color_map }
+    data["params"]["test"] = { "source": source_blocks, "given": given_blocks, "colors": color_map, "color_column": color_column}
 
 def render(element_html, data):
     if data["panel"] == "question":
