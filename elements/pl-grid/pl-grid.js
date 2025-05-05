@@ -6,6 +6,7 @@ $(function() {
   
   let source_grid = GridStack.init({
     acceptWidgets: true, // allow dropping items from other grids (for deleting)
+    disableResize: true,
     float: false
   }, '.source-grid');
   source_grid.load(question_data.source);
@@ -14,6 +15,7 @@ $(function() {
 
   let destination_grid = GridStack.init({
     acceptWidgets: true, // allow dropping items from other grids (for deleting)
+    disableResize: true,
     float: true// prevent auto-rearranging that minimizes free space
   }, '.dest-grid');
   destination_grid.load(question_data.given);
@@ -59,6 +61,7 @@ $(function() {
     if (Array.isArray(solution_data) && solution_data.length > 0) {
       solution_grid = GridStack.init({
         acceptWidgets: false, // allow dropping items from other grids (for deleting)
+        disableResize: true,
         float: true
       }, '.sol-grid');
       solution_grid.load(solution_data);
@@ -108,11 +111,13 @@ $(function() {
       let answer_x = cell.attr("gs-x");
       let answer_y = cell.attr("gs-y");
       let answer_w = cell.attr("gs-w");
+      let answer_h = cell.attr("gs-h") || 1;
 
       student_answers.push({
         x: answer_x,
         y: answer_y,
         w: answer_w,
+        h: answer_h,
         content: answer_html
       });
     }

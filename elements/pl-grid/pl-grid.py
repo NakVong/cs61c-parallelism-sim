@@ -28,7 +28,8 @@ def prepare(element_html, data):
                     answer_data_dict: GridAnswerData = {
                         "x": int(inner_tag.get("x", 100)),
                         "y": int(inner_tag.get("y", 100)),
-                        "w": 2,
+                        "w": int(inner_tag.get("w", 2)),
+                        "h": int(inner_tag.get("h", 1)),
                         "content": inner_tag.text_content().strip()
                     }
                     correct_answers.append(answer_data_dict)
@@ -39,7 +40,8 @@ def prepare(element_html, data):
                     given_block_dict: GridAnswerData = {
                         "x": int(inner_tag.get("x", 100)),
                         "y": int(inner_tag.get("y", 100)),
-                        "w": 2,
+                        "w": int(inner_tag.get("w", 2)),
+                        "h": int(inner_tag.get("h", 1)),
                         "content": content
                     }
                     given_blocks.append(given_block_dict)
@@ -52,7 +54,8 @@ def prepare(element_html, data):
                     source_block_dict: GridAnswerData = {
                         "x": int(inner_tag.get("x", 100)),
                         "y": int(inner_tag.get("y", 100)),
-                        "w": 2,
+                        "w": int(inner_tag.get("w", 2)),
+                        "h": int(inner_tag.get("h", 1)),
                         "content": content
                     }
                     source_blocks.append(source_block_dict)
@@ -96,10 +99,6 @@ def render(element_html, data):
             return chevron.render(f, html_params).strip()
     
 
-# def parse(element_html, data):
-#     student_answer = data["raw_submitted_answers"].get("test-input", "[]")
-#     student_answer = json.loads(student_answer)
-#     data["submitted_answers"]["test"] = student_answer
 def parse(element_html, data):
     new_submission = json.loads(data["raw_submitted_answers"].get("test-input", "[]"))
     
@@ -123,6 +122,7 @@ def grade(element_html, data):
         cell["x"] = int(cell["x"])
         cell["y"] = int(cell["y"])
         cell["w"] = int(cell["w"])
+        cell["h"] = int(cell["h"])
 
         if (cell in correct_answers):
             correct_cells += 1
